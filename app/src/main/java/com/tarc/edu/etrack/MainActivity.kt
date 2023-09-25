@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, splash::class.java)
         startActivity(intent)
+        finish()
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {

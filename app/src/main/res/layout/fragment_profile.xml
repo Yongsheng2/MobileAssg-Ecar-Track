@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewProfile"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/bebas_neue"
+        android:text="@string/profile"
+        android:textAlignment="center"
+        android:textColor="#673AB7"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:background="#00FFFFFF"
+        android:text="@string/user_info"
+        android:textColor="#000000"
+        app:icon="@drawable/baseline_person_24"
+        app:layout_constraintEnd_toEndOf="@+id/textViewProfile"
+        app:layout_constraintStart_toStartOf="@+id/textViewProfile"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProfile" />
+
+    <Button
+        android:id="@+id/buttonSet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:background="#00FFFFFF"
+        android:text="@string/setting"
+        android:textColor="#000000"
+        app:icon="@drawable/baseline_settings_24"
+        app:layout_constraintEnd_toEndOf="@+id/buttonUserInfo"
+        app:layout_constraintStart_toStartOf="@+id/buttonUserInfo"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUserInfo" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:background="#00FFFFFF"
+        android:text="@string/logout"
+        android:textColor="#000000"
+        app:icon="@drawable/baseline_logout_24"
+        app:layout_constraintEnd_toEndOf="@+id/buttonSet"
+        app:layout_constraintStart_toStartOf="@+id/buttonSet"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSet" />
+</androidx.constraintlayout.widget.ConstraintLayout>

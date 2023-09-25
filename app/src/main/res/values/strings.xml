@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">E-Car Track</string>
+    <string name="title">E-Car Track</string>
+
+    <!--home page-->
+    <string name="home">Home</string>
+
+    <!--find station page-->
+    <string name="find_station">Find Station</string>
+    <string name="search_area">Search Your Area</string>
+    <string name="station_detail">Station Details</string>
+    <string name="status">Status</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="pending">Pending</string>
+    <string name="back">Back</string>
+    <string name="maps">Maps</string>
+
+    <!--favourite page-->
+    <string name="favorite">Favourite</string>
+
+    <!--notify page-->
+    <string name="notifications">Notifications</string>
+
+    <!--profile page-->
+    <string name="profile">Profile</string>
+    <string name="user_info">User Information</string>
+    <string name="username">Username</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="car_type">Car Type</string>
+    <string name="setting">Settings</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+</resources>

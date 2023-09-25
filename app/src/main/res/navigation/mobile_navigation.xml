@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/menu_home"
+        android:name="com.tarc.edu.etrack.ui.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/menu_find_station"
+        android:name="com.tarc.edu.etrack.ui.find_station.FindStationFragment"
+        android:label="@string/find_station"
+        tools:layout="@layout/fragment_find_station" />
+
+    <fragment
+        android:id="@+id/menu_favorite"
+        android:name="com.tarc.edu.etrack.ui.favorite.FavoriteFragment"
+        android:label="@string/favorite"
+        tools:layout="@layout/fragment_favorite"/>
+
+    <fragment
+        android:id="@+id/menu_notifications"
+        android:name="com.tarc.edu.etrack.ui.notifications.NotificationsFragment"
+        android:label="@string/notifications"
+        tools:layout="@layout/fragment_notifications"/>
+
+    <fragment
+        android:id="@+id/menu_profile"
+        android:name="com.tarc.edu.etrack.ui.profile.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile"/>
+</navigation>

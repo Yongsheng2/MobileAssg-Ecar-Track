@@ -16,6 +16,9 @@
             android:name=".ui.login.login"
             android:exported="false" />
         <activity
+            android:name=".ui.register.register"
+            android:exported="false" />
+        <activity
             android:name=".ui.splash.splash"
             android:exported="false" />
         <activity

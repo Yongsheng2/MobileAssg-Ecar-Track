@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "713856475402",
+    "firebase_url": "https://e-car-track-d4ed3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "e-car-track-d4ed3",
+    "storage_bucket": "e-car-track-d4ed3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713856475402:android:16edd36b076e44d0e61af3",
+        "android_client_info": {
+          "package_name": "com.tarc.edu.etrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp115C5sDxximsn75brIR5GmpKmUw0gS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,10 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.core.view.View
+import com.tarc.edu.etrack.MainActivity
 import com.tarc.edu.etrack.databinding.ActivityLoginBinding
 import com.tarc.edu.etrack.ui.home.HomeFragment
 import com.tarc.edu.etrack.ui.register.register
@@ -27,11 +27,11 @@ class login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val usernamelogin = binding.editTextTextUsernameLogin
-        val passwordlogin = binding.editTextTextPasswordLogin
+        val passwordlogin=  binding.editTextTextPasswordLogin
 
         binding.buttonLogin.setOnClickListener(){
             val username = usernamelogin.text.toString()
@@ -56,16 +56,17 @@ class login : AppCompatActivity() {
                 if (passwordlogin == password) {
                     val intent = Intent(this@login, HomeFragment::class.java)
                     intent.putExtra("username", usernamelogin)
-                    val un = binding.editTextTextUsernameLogin
-                    val currenttime = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                    val formatted = currenttime.format(formatter)
 
-                    val logRecord = loginrecord(usernamelogin, formatted)
+                    val un = binding.editTextTextUsernameLogin
+                    val currentTime = LocalDateTime.now()
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    val formatted = currentTime.format(formatter)
+
+                    val logRec = loginrecord(usernamelogin, formatted)
 
                     database = FirebaseDatabase.getInstance().getReference("loginrecord")
-                    database.child(usernamelogin).setValue(logRecord).addOnSuccessListener {
-                        Toast.makeText(this, "Welcome Back", Toast.LENGTH_SHORT).show()
+                    database.child(usernamelogin).setValue(logRec).addOnSuccessListener {
+                        Toast.makeText(this, "Welcome Back, $usernamelogin", Toast.LENGTH_SHORT).show()
                     }
                     updateData(un.text.toString())
                     startActivity(intent)
@@ -83,7 +84,8 @@ class login : AppCompatActivity() {
     private fun updateData(e: String){
         var database: DatabaseReference = FirebaseDatabase.getInstance().getReference("PassData")
 
-        val up = mapOf<String, String>("username" to e,)
+        val up = mapOf<String, String>(
+            "username" to e,)
         database.updateChildren(up)
 
 //        val parentLayout: android.view.View = findViewById(android.R.id.content)

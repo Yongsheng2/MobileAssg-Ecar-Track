@@ -27,9 +27,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intent = Intent(this, splash::class.java)
+        val intent = Intent(this@MainActivity, splash::class.java)
         startActivity(intent)
-        finish()
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {

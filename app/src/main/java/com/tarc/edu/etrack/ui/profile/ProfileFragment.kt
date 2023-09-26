@@ -6,13 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
-import com.tarc.edu.etrack.LoginActivity
+import com.tarc.edu.etrack.ui.login.LoginActivity
 import com.tarc.edu.etrack.R
-import com.tarc.edu.etrack.databinding.FragmentHomeBinding
 import com.tarc.edu.etrack.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -34,6 +32,17 @@ class ProfileFragment : Fragment() {
             activity?.finish() // Close the MainActivity
         } else {
             // User is authenticated, you can display the profile
+        }
+
+        val userinfoButton = view.findViewById<Button>(R.id.buttonUserInfo)
+
+        userinfoButton.setOnClickListener{
+            val userinfofragment = UserInfoFragment()
+
+            val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+            transaction.replace(R.id.fragment_container, userinfofragment)
+            transaction.addToBackStack(null) // Optional, adds the transaction to the back stack
+            transaction.commit()
         }
 
         val logoutButton = view.findViewById<Button>(R.id.buttonLogout)

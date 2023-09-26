@@ -12,7 +12,7 @@
       android:layout_width="0dp"
       android:layout_height="50dp"
       android:layout_marginStart="100dp"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="16dp"
       android:layout_marginEnd="100dp"
       android:fontFamily="@font/bebas_neue"
       android:text="@string/login"
@@ -28,6 +28,7 @@
       android:layout_width="0dp"
       android:layout_height="50dp"
       android:layout_marginStart="48dp"
+      android:layout_marginTop="16dp"
       android:layout_marginEnd="48dp"
       android:ems="10"
       android:hint="@string/password"
@@ -62,10 +63,10 @@
       android:layout_width="0dp"
       android:layout_height="50dp"
       android:layout_marginStart="48dp"
-      android:layout_marginTop="48dp"
+      android:layout_marginTop="32dp"
       android:layout_marginEnd="48dp"
       android:ems="10"
-      android:hint="@string/username"
+      android:hint="@string/email"
       android:inputType="text"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -78,4 +79,14 @@
       android:visibility="invisible"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent" />
+
+  <Button
+      android:id="@+id/buttonResetPassword"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/resetpassword"
+      app:layout_constraintEnd_toEndOf="@+id/buttongetRegister"
+      app:layout_constraintStart_toStartOf="@+id/buttongetRegister"
+      app:layout_constraintTop_toBottomOf="@+id/buttongetRegister" />
 </androidx.constraintlayout.widget.ConstraintLayout>

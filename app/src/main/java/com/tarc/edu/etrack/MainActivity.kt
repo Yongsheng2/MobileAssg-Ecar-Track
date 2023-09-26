@@ -8,14 +8,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.tarc.edu.etrack.databinding.ActivityMainBinding
 import com.tarc.edu.etrack.ui.favorite.FavoriteFragment
 import com.tarc.edu.etrack.ui.find_station.FindStationFragment
 import com.tarc.edu.etrack.ui.home.HomeFragment
-import com.tarc.edu.etrack.ui.login.login
 import com.tarc.edu.etrack.ui.notifications.NotificationsFragment
 import com.tarc.edu.etrack.ui.profile.ProfileFragment
-import com.tarc.edu.etrack.ui.splash.splash
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,12 +22,14 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.bottom_navigation)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val intent = Intent(this@MainActivity, splash::class.java)
-        startActivity(intent)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
+        true
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -66,7 +67,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
+    }
+    override fun onStop() {
+        super.onStop()
+        FirebaseAuth.getInstance().signOut()
     }
 
 
 }
+
+
+
+

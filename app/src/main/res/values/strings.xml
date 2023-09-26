@@ -2,8 +2,13 @@
     <string name="app_name">E-Car Track</string>
     <string name="title">E-Car Track</string>
 
+    <!--login page-->
+    <string name="resetpassword">Reset Password</string>
+
+
     <!--home page-->
     <string name="home">Home</string>
+    <string name="hometitle">Most Popular Station</string>
 
     <!--find station page-->
     <string name="find_station">Find Station</string>

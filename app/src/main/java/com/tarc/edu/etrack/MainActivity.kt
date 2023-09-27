@@ -2,6 +2,7 @@ package com.tarc.edu.etrack
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -73,7 +74,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         FirebaseAuth.getInstance().signOut()
+        Log.d("MainActivity", "User signed out in onStop")
     }
+
 
 
 }

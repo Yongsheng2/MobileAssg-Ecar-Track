@@ -11,8 +11,17 @@ import com.tarc.edu.etrack.R
 class stationdetailFragment : Fragment() {
 
     companion object {
-        fun newInstance() = stationdetailFragment()
+        private const val ARG_STATION_NAME = "stationName"
+
+        fun newInstance(stationName: String): stationdetailFragment {
+            val fragment = stationdetailFragment()
+            val args = Bundle()
+            args.putString(ARG_STATION_NAME, stationName)
+            fragment.arguments = args
+            return fragment
+        }
     }
+
 
     private lateinit var viewModel: StationdetailViewModel
 

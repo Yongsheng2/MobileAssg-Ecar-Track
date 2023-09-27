@@ -45,6 +45,17 @@ class ProfileFragment : Fragment() {
             transaction.commit()
         }
 
+        val addcarButton = view.findViewById<Button>(R.id.buttonAddCar)
+
+        addcarButton.setOnClickListener{
+            val addcarfragment = AddCarFragment()
+
+            val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+            transaction.replace(R.id.fragment_container, addcarfragment)
+            transaction.addToBackStack(null) // Optional, adds the transaction to the back stack
+            transaction.commit()
+        }
+
         val logoutButton = view.findViewById<Button>(R.id.buttonLogout)
 
         logoutButton.setOnClickListener {

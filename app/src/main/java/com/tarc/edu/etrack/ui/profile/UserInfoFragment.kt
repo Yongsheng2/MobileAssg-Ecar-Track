@@ -33,6 +33,7 @@ class UserInfoFragment : Fragment() {
 
         auth = Firebase.auth
         database = FirebaseDatabase.getInstance().reference.child("users")
+        database = FirebaseDatabase.getInstance().reference.child("Cars")
 
         val editTextUsername = view.findViewById<EditText>(R.id.editTextUserInfoUsername)
         val textViewEmail = view.findViewById<TextView>(R.id.textViewInfoEmail)
@@ -45,15 +46,43 @@ class UserInfoFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val username = dataSnapshot.getValue(String::class.java) ?: ""
-                    if (username != null) {
-                        // Set the username directly in the EditText
-                        editTextUsername.setText(username)
-                        val email = dataSnapshot.child("email").getValue(String::class.java) ?: ""
-                        val carType = dataSnapshot.child("Cartype").getValue(String::class.java) ?: ""
-                        // Display email and car type in TextViews
-                        textViewEmail.text = "$email"
-                        textViewCarType.text = "$carType"
-                    }
+
+                    // Set the username directly in the EditText
+                    editTextUsername.setText(username)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle errors
+            }
+        })
+
+        // Retrieve email
+        database.child(userId).child("email").addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val email = dataSnapshot.getValue(String::class.java) ?: ""
+
+                    // Display email in TextView
+                    textViewEmail.text = "$email"
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle errors
+            }
+        })
+
+        // Retrieve carType
+        database.child(userId).child("CarType").addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val carType = dataSnapshot.getValue(String::class.java) ?: ""
+
+                    // Display car type in TextView
+                    textViewCarType.text = "$carType"
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {
@@ -63,12 +92,8 @@ class UserInfoFragment : Fragment() {
 
         buttonSave.setOnClickListener {
             val newUsername = editTextUsername.text.toString()
-
             // Update the username in the database
             database.child(userId).child("username").setValue(newUsername)
-
-            // You can also update the local user object if needed
-            // user?.username = newUsername
         }
 
         return view

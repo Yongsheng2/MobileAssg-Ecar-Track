@@ -4,12 +4,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.tarc.edu.etrack.R
 import com.tarc.edu.etrack.databinding.ItemLayoutBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.tarc.edu.etrack.ui.home.HomeFragment
 import com.tarc.edu.etrack.ui.station_details.StationData
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -24,10 +26,9 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(station: StationData) {
             binding.textViewStationTitle.text = station.stationName
-            binding.textViewStationNearby.text = station.stationAddress
-
             // Create a reference to the image in Firebase Storage
             val imageRef = storageRef.child("${station.name}.jpg")
+
 
             // Load the image from the Firebase Storage reference
             imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -49,6 +50,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
                 } else {
                     binding.textViewStationStatus.text = "Closed"
                 }
+
             }.addOnFailureListener { exception ->
                 // Handle any errors that occur while loading the image
                 Log.e("MyAdapter", "Image download failed: ${exception.message}")

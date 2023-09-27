@@ -74,12 +74,13 @@ class HomeFragment : Fragment() {
                     val stationList = ArrayList<StationData>()
                     for (stationSnapshot in dataSnapshot.children) {
                         val stationName = stationSnapshot.child("Name").getValue(String::class.java) ?: ""
-                        val stationAddress = stationSnapshot.child("StationAddress").getValue(String::class.java) ?: ""
                         val name = stationSnapshot.key ?: ""
                         val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
                         val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
 
-                        val stationData = StationData(stationName, stationAddress, name, openTime, closeTime)
+                        val stationData = StationData(stationName, name, openTime, closeTime)
+
+
                         stationList.add(stationData)
                     }
 

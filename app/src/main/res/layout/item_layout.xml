@@ -36,25 +36,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:text="TextView" />
 
-    <TextView
-        android:id="@+id/textViewStationNearby"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/imageViewStation"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStationStatus"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="TextView" />
-
     <Button
         android:id="@+id/buttonStationDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/station_detail"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/textViewStationTitle"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStationNearby" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewStationStatus" />
 </androidx.constraintlayout.widget.ConstraintLayout>

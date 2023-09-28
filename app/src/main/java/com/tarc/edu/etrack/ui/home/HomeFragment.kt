@@ -5,9 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +20,7 @@ import com.tarc.edu.etrack.R
 import com.tarc.edu.etrack.RecyclerView.MyAdapter
 import com.tarc.edu.etrack.databinding.FragmentHomeBinding
 import com.tarc.edu.etrack.ui.station_details.StationData
-import java.text.SimpleDateFormat
+import com.tarc.edu.etrack.ui.station_details.StationDetailFragment
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -31,22 +29,36 @@ class HomeFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyAdapter
+    fun navigateToAnotherFragment(selectedStationName: String) {
+        val fragment = StationDetailFragment() // Replace with the actual name of the fragment you want to navigate to.
 
+        // Pass the selectedStationName to the new fragment
+        val bundle = Bundle()
+        bundle.putString("stationName", selectedStationName)
+        fragment.arguments = bundle
+
+        // Use FragmentTransaction to navigate to the new fragment
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment) // Replace 'fragmentContainer' with your actual container ID
+        transaction.addToBackStack(null) // Add to back stack if needed
+        transaction.commit()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
         auth = Firebase.auth
         database = FirebaseDatabase.getInstance().reference.child("Station") // Update the reference to your Firebase database
 
-        val textViewWelcome = view.findViewById<TextView>(R.id.textViewWelcome)
-        recyclerView = view.findViewById(R.id.recyclerViewStation)
 
+        adapter = MyAdapter({ selectedStationName ->
+            navigateToAnotherFragment(selectedStationName)
+        }, this)
         // Set up the RecyclerView
-        adapter = MyAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.recyclerViewStation.adapter = adapter
+        binding.recyclerViewStation.layoutManager = LinearLayoutManager(requireContext())
 
         try {
             if (auth.currentUser != null) {
@@ -54,8 +66,7 @@ class HomeFragment : Fragment() {
                 val userId = auth.currentUser?.uid ?: ""
                 database.child(userId).child("username").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val username = dataSnapshot.getValue(String::class.java) ?: ""
-                        textViewWelcome.text = "Welcome Back, $username"
+                        binding.textViewWelcome.text = "Welcome to use E-track"
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -65,7 +76,7 @@ class HomeFragment : Fragment() {
                 })
             } else {
                 // User is not authenticated, display a login message
-                textViewWelcome.text = "Login to E-track to access more features!"
+                binding.textViewWelcome.text = "Login to E-track to access more features!"
             }
 
             // Retrieve and display station data
@@ -78,13 +89,13 @@ class HomeFragment : Fragment() {
                         val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
                         val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
 
+
                         val stationData = StationData(stationName, name, openTime, closeTime)
-
-
                         stationList.add(stationData)
                     }
 
                     adapter.setData(stationList)
+                    binding.recyclerViewStation.adapter = adapter
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -98,6 +109,9 @@ class HomeFragment : Fragment() {
             Log.e("HomeFragment", "Exception: ${e.message}")
         }
 
-        return view
+        return binding.root
     }
+
+
+
 }

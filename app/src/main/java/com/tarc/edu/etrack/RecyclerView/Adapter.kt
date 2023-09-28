@@ -2,9 +2,7 @@ package com.tarc.edu.etrack.RecyclerView
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.tarc.edu.etrack.R
 import com.tarc.edu.etrack.databinding.ItemLayoutBinding
@@ -17,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+class MyAdapter(private val onItemClick: (String) -> Unit, private val homeFragment: HomeFragment) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     private var stationList: List<StationData> = emptyList()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -29,7 +27,10 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
             // Create a reference to the image in Firebase Storage
             val imageRef = storageRef.child("${station.name}.jpg")
 
-
+            binding.buttonStationDetails.setOnClickListener {
+                val name = station.name // Get the name from the station
+                homeFragment.navigateToAnotherFragment(name)
+            }
             // Load the image from the Firebase Storage reference
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 val imageStorageUrl = uri.toString()
@@ -85,4 +86,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
         return currentTimeDate.after(openTimeDate) && currentTimeDate.before(closeTimeDate)
     }
+
+
 }
+

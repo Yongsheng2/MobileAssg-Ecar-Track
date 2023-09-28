@@ -71,11 +71,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    override fun onStop() {
-        super.onStop()
-        FirebaseAuth.getInstance().signOut()
-        Log.d("MainActivity", "User signed out in onStop")
-    }
 
 
 

@@ -44,6 +44,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="@string/station_detail"
         android:textSize="10sp"
+        android:onClick="onStationDetailsButtonClicked"
         app:layout_constraintEnd_toEndOf="@+id/textViewStationTitle"
         app:layout_constraintTop_toBottomOf="@+id/textViewStationStatus" />
 </androidx.constraintlayout.widget.ConstraintLayout>

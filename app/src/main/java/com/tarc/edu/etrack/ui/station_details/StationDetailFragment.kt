@@ -1,13 +1,17 @@
 package com.tarc.edu.etrack.ui.station_details
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.tarc.edu.etrack.R
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DataSnapshot
@@ -23,6 +27,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class StationDetailFragment : Fragment() {
@@ -77,6 +82,21 @@ class StationDetailFragment : Fragment() {
                     })
                 }
 
+                stationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                        // Retrieve the "Chargertype" value from the Firebase data
+                        val chargertype = dataSnapshot.child("Chargertype").getValue(String::class.java)
+
+                        // Set the "Chargertype" value to the textViewChargertype
+                        val textViewChargertype = rootView.findViewById<TextView>(R.id.textViewChargertype)
+                        textViewChargertype.text = chargertype
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle errors
+                    }
+                })
                 // Set up an OnClickListener for the favorite button
                 favouriteButton.setOnClickListener {
                     if (user != null) {
@@ -105,6 +125,15 @@ class StationDetailFragment : Fragment() {
                         // User is not authenticated, handle this case (e.g., show a login prompt).
                     }
                 }
+
+                val buttonMaps = rootView.findViewById<Button>(R.id.buttonMaps)
+
+                buttonMaps.setOnClickListener {
+                    val address = dataSnapshot.child("StationAddress").getValue(String::class.java)
+                    openWebBrowserWithAddress(address)
+                }
+
+
                 val textViewName = rootView.findViewById<TextView>(R.id.textViewStationName)
                 textViewName.text = stationname
 
@@ -113,7 +142,7 @@ class StationDetailFragment : Fragment() {
 
                 val textViewStatus = rootView.findViewById<TextView>(R.id.textViewStatus)
 
-                val currentTime = "09:30" // Replace with your actual current time
+                val currentTime = getCurrentDeviceTime()
 
                 val stationOpen = isStationOpen(currentTime, openTime, closeTime)
                 if (stationOpen) {
@@ -181,6 +210,23 @@ class StationDetailFragment : Fragment() {
         return rootView
     }
 
+    private fun openWebBrowserWithAddress(address: String?) {
+        if (address != null) {
+            // Construct a URL to open in the browser
+            val url = "https://www.google.com/maps?q=$address"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+
+            val browserApps = requireActivity().packageManager.queryIntentActivities(intent, 0)
+
+            if (browserApps.isNotEmpty()) {
+                startActivity(intent)
+            } else {
+                // Handle the case where a web browser is not available
+                Toast.makeText(requireContext(), "No web browser found to open the address", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun isStationOpen(currentTime: String, openTime: String, closeTime: String): Boolean {
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         val currentTimeDate = sdf.parse(currentTime)
@@ -188,5 +234,11 @@ class StationDetailFragment : Fragment() {
         val closeTimeDate = sdf.parse(closeTime)
 
         return currentTimeDate.after(openTimeDate) && currentTimeDate.before(closeTimeDate)
+    }
+    private fun getCurrentDeviceTime(): String {
+        val currentTimeMillis = System.currentTimeMillis()
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val currentTimeDate = Date(currentTimeMillis)
+        return sdf.format(currentTimeDate)
     }
 }

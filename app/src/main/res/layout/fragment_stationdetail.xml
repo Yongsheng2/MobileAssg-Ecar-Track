@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="100dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="100dp"
         android:fontFamily="@font/bebas_neue"
         android:text="@string/station_detail"
@@ -53,13 +54,10 @@
 
     <TextView
         android:id="@+id/textViewStationName"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewStt2"
         app:layout_constraintTop_toBottomOf="@+id/imageViewDetail2" />
 
     <TextView
@@ -74,11 +72,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewStationName" />
 
     <TextView
-        android:id="@+id/textViewDistance"
+        android:id="@+id/textViewChargertype"
         android:layout_width="130dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewStationAddress" />
 
@@ -91,7 +89,18 @@
         android:text="Status: "
         android:textAlignment="viewEnd"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDistance" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewChargertype" />
+
+    <TextView
+        android:id="@+id/textViewStt2"
+        android:layout_width="101dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="Name Station: "
+        android:textAlignment="viewEnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewDetail2" />
 
     <TextView
         android:id="@+id/textViewStatus"
@@ -144,5 +153,16 @@
         android:src="@drawable/baseline_star_border_purple500_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewStationAddress" />
+
+    <Spinner
+        android:id="@+id/spinnerPendingStation"
+        android:layout_width="352dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

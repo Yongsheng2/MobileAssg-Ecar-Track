@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -18,17 +17,21 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.tarc.edu.etrack.R
 import com.tarc.edu.etrack.RecyclerView.MyAdapter
+import com.tarc.edu.etrack.RecyclerView.StationNavigator
 import com.tarc.edu.etrack.databinding.FragmentHomeBinding
 import com.tarc.edu.etrack.ui.station_details.StationData
 import com.tarc.edu.etrack.ui.station_details.StationDetailFragment
 import java.util.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), StationNavigator {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyAdapter
+
+    override fun navigateToStationDetail(stationName: String) {
+        navigateToAnotherFragment(stationName)
+    }
     fun navigateToAnotherFragment(selectedStationName: String) {
         val fragment = StationDetailFragment() // Replace with the actual name of the fragment you want to navigate to.
 
@@ -88,8 +91,6 @@ class HomeFragment : Fragment() {
                         val name = stationSnapshot.key ?: ""
                         val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
                         val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
-
-
                         val stationData = StationData(stationName, name, openTime, closeTime)
                         stationList.add(stationData)
                     }
@@ -111,6 +112,7 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
 
 
 

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.tarc.edu.etrack.R
@@ -13,7 +14,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.firebase.ui.storage.images.FirebaseImageLoader
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
@@ -21,6 +27,7 @@ import java.util.Locale
 
 class StationDetailFragment : Fragment() {
 
+    private var isFavorite = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,6 +35,7 @@ class StationDetailFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_stationdetail, container, false)
 
         val name = arguments?.getString("stationName")
+
 
         // Firebase Realtime Database
         val database = FirebaseDatabase.getInstance()
@@ -40,6 +48,63 @@ class StationDetailFragment : Fragment() {
                 val openTime = dataSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
                 val closeTime = dataSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
 
+                val favouriteButton = rootView.findViewById<ImageButton>(R.id.favouritebutton)
+
+                // Check if the user is authenticated
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    val userId = user.uid  // Assign the user's ID to userId
+
+                    // Create a reference to the user's favorites node
+                    val userFavoritesRef: DatabaseReference = database.getReference("users/$userId/favorites")
+
+                    // Add a ValueEventListener to retrieve the favorite status for the specific station
+                    userFavoritesRef.child(name.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            isFavorite = dataSnapshot.getValue(Boolean::class.java) ?: false
+
+                            // Update the button's image resource based on isFavorite
+                            if (isFavorite) {
+                                favouriteButton.setImageResource(R.drawable.baseline_star_24)
+                            } else {
+                                favouriteButton.setImageResource(R.drawable.baseline_star_border_purple500_24)
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Handle errors
+                        }
+                    })
+                }
+
+                // Set up an OnClickListener for the favorite button
+                favouriteButton.setOnClickListener {
+                    if (user != null) {
+                        val userId = user.uid  // Assign the user's ID to userId
+                        // Create a reference to the user's favorites node
+                        val userFavoritesRef: DatabaseReference = database.getReference("users/$userId/favorites")
+
+                        if (isFavorite) {
+                            // If already a favorite, set the value to false
+                            userFavoritesRef.child(name.toString()).setValue(false)
+                        } else {
+                            // If not a favorite, set the value to true
+                            userFavoritesRef.child(name.toString()).setValue(true)
+                        }
+
+                        // Toggle the isFavorite state
+                        isFavorite = !isFavorite
+
+                        // Update the button's image resource based on isFavorite
+                        if (isFavorite) {
+                            favouriteButton.setImageResource(R.drawable.baseline_star_24)
+                        } else {
+                            favouriteButton.setImageResource(R.drawable.baseline_star_border_purple500_24)
+                        }
+                    } else {
+                        // User is not authenticated, handle this case (e.g., show a login prompt).
+                    }
+                }
                 val textViewName = rootView.findViewById<TextView>(R.id.textViewStationName)
                 textViewName.text = stationname
 
@@ -56,6 +121,21 @@ class StationDetailFragment : Fragment() {
                 } else {
                     textViewStatus.text = "Closed"
                 }
+
+                // Load the image using FirebaseUI and Glide
+                val storageRef = FirebaseStorage.getInstance().reference.child("StationImage")
+                val imageViewDetail1 = rootView.findViewById<ImageView>(R.id.imageViewDetail1)
+
+                // Set the image using FirebaseUI and Glide
+                val imageRef = storageRef.child("$name.jpg")
+
+                // Load the image using FirebaseUI and Glide
+                val options = RequestOptions() // Add any desired options here
+                val glide = Glide.with(requireContext())
+                    .applyDefaultRequestOptions(options)
+
+                glide.load(imageRef)
+                    .into(imageViewDetail1)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -69,23 +149,33 @@ class StationDetailFragment : Fragment() {
         val stationImage2 = rootView.findViewById<ImageView>(R.id.imageViewDetail2)
         val stationImage3 = rootView.findViewById<ImageView>(R.id.imageViewDetail3)
 
-        // Load images using Glide (adjust the path as per your Firebase Storage structure)
+        val storageRef = FirebaseStorage.getInstance().getReference().child("StationImage")
+
+        val requestOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache images
+            .error(R.drawable.error_image)  // Placeholder or error image
+
+        // Load images using Glide from Firebase Storage
+        val imageRef1 = storageRef.child("$name.jpg")
+        val imageRef2 = storageRef.child("${name}1.jpg")
+        val imageRef3 = storageRef.child("${name}2.jpg")
+
         Glide.with(this)
-            .load("gs://e-car-track-d4ed3.appspot.com/StationImage/$name.jpg")
-            .override(200, 200) // Set the desired dimensions here
+            .load(imageRef1)
             .transition(DrawableTransitionOptions.withCrossFade())
+            .apply(requestOptions)
             .into(stationImage1)
 
         Glide.with(this)
-            .load("gs://e-car-track-d4ed3.appspot.com/StationImage/${name}1.jpg")
-            .override(200, 200) // Set the desired dimensions here
+            .load(imageRef2)
             .transition(DrawableTransitionOptions.withCrossFade())
+            .apply(requestOptions)
             .into(stationImage2)
 
         Glide.with(this)
-            .load("gs://e-car-track-d4ed3.appspot.com/StationImage/${name}2.jpg")
-            .override(200, 200) // Set the desired dimensions here
+            .load(imageRef3)
             .transition(DrawableTransitionOptions.withCrossFade())
+            .apply(requestOptions)
             .into(stationImage3)
 
         return rootView

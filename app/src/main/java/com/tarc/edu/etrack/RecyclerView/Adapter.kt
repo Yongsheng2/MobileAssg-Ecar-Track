@@ -15,7 +15,14 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MyAdapter(private val onItemClick: (String) -> Unit, private val homeFragment: HomeFragment) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+interface StationNavigator {
+    fun navigateToStationDetail(stationName: String)
+}
+
+class MyAdapter(
+    private val onItemClick: (String) -> Unit,
+    private val navigator: StationNavigator
+) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     private var stationList: List<StationData> = emptyList()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -29,8 +36,9 @@ class MyAdapter(private val onItemClick: (String) -> Unit, private val homeFragm
 
             binding.buttonStationDetails.setOnClickListener {
                 val name = station.name // Get the name from the station
-                homeFragment.navigateToAnotherFragment(name)
+                navigator.navigateToStationDetail(name)
             }
+
             // Load the image from the Firebase Storage reference
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 val imageStorageUrl = uri.toString()

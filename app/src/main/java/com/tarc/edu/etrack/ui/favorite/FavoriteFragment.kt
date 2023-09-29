@@ -65,16 +65,17 @@ class FavoriteFragment : Fragment(), StationNavigator {
 
         val completedTasks = AtomicInteger(0)
         val userId = auth.currentUser?.uid ?: ""
-        Log.d("FavoriteFragment", "onCreateView")
         database.child("users").child(userId).child("favorites")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val totalFavorites = dataSnapshot.childrenCount.toInt()
                     val stationList = ArrayList<StationData>()
-                    for (favoriteSnapshot in dataSnapshot.children) {
-                        if (favoriteSnapshot.getValue(Boolean::class.java) == true) {
-                            val stationName = favoriteSnapshot.key ?: ""
 
+                    for (favoriteSnapshot in dataSnapshot.children) {
+                        val isFavorite = favoriteSnapshot.getValue(Boolean::class.java) == true
+                        val stationName = favoriteSnapshot.key ?: ""
+
+                        if (isFavorite) {
                             // Fetch details for each favorite station
                             database.child("Station").child(stationName)
                                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -84,18 +85,21 @@ class FavoriteFragment : Fragment(), StationNavigator {
                                         val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
                                         val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
                                         val stationData = StationData(stationName, name, openTime, closeTime)
+
                                         stationList.add(stationData)
 
                                         if (completedTasks.incrementAndGet() == totalFavorites) {
                                             adapter.setData(stationList)
                                         }
-                                        Log.d("FavoriteFragment", "onDataChange: $dataSnapshot")
                                     }
 
                                     override fun onCancelled(databaseError: DatabaseError) {
                                         Log.e("FavouriteFragment", "Database Error: ${databaseError.message}")
                                     }
                                 })
+                        } else {
+                            // If the station is not a favorite, decrement completedTasks
+                            completedTasks.incrementAndGet()
                         }
                     }
                 }

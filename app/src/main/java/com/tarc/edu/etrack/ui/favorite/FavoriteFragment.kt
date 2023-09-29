@@ -1,10 +1,11 @@
-package com.tarc.edu.etrack.ui.home
+package com.tarc.edu.etrack.ui.favorite
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -18,96 +19,92 @@ import com.google.firebase.ktx.Firebase
 import com.tarc.edu.etrack.R
 import com.tarc.edu.etrack.RecyclerView.MyAdapter
 import com.tarc.edu.etrack.RecyclerView.StationNavigator
+import com.tarc.edu.etrack.databinding.FragmentFavoriteBinding
 import com.tarc.edu.etrack.databinding.FragmentHomeBinding
 import com.tarc.edu.etrack.ui.station_details.StationData
 import com.tarc.edu.etrack.ui.station_details.StationDetailFragment
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+
 
 class FavoriteFragment : Fragment(), StationNavigator {
 
-    override fun navigateToStationDetail(stationName: String) {
-
-        navigateToAnotherFragment(stationName)
-    }
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var adapter: MyAdapter
-    fun navigateToAnotherFragment(selectedStationName: String) {
-        val fragment = StationDetailFragment() // Replace with the actual name of the fragment you want to navigate to.
 
-        // Pass the selectedStationName to the new fragment
+    override fun navigateToStationDetail(stationName: String) {
+        navigateToAnotherFragment(stationName)
+    }
+
+
+    fun navigateToAnotherFragment(selectedStationName: String) {
+        val fragment = StationDetailFragment()
         val bundle = Bundle()
         bundle.putString("stationName", selectedStationName)
         fragment.arguments = bundle
-
-        // Use FragmentTransaction to navigate to the new fragment
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment) // Replace 'fragmentContainer' with your actual container ID
-        transaction.addToBackStack(null) // Add to back stack if needed
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+
         auth = Firebase.auth
-        database = FirebaseDatabase.getInstance().reference.child("Station") // Update the reference to your Firebase database
+        database = FirebaseDatabase.getInstance().reference  // Change here
 
         adapter = MyAdapter({ selectedStationName ->
             navigateToAnotherFragment(selectedStationName)
         }, this)
+
         // Set up the RecyclerView
+        binding.RecyclerFavouriteView.adapter = adapter
+        binding.RecyclerFavouriteView.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.recyclerViewStation.adapter = adapter
-        binding.recyclerViewStation.layoutManager = LinearLayoutManager(requireContext())
+        val completedTasks = AtomicInteger(0)
+        val userId = auth.currentUser?.uid ?: ""
+        Log.d("FavoriteFragment", "onCreateView")
+        database.child("users").child(userId).child("favorites")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val totalFavorites = dataSnapshot.childrenCount.toInt()
+                    val stationList = ArrayList<StationData>()
+                    for (favoriteSnapshot in dataSnapshot.children) {
+                        if (favoriteSnapshot.getValue(Boolean::class.java) == true) {
+                            val stationName = favoriteSnapshot.key ?: ""
 
-        try {
-            val userId = auth.currentUser?.uid ?: ""
+                            // Fetch details for each favorite station
+                            database.child("Station").child(stationName)
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(stationSnapshot: DataSnapshot) {
+                                        val name = stationSnapshot.key ?: ""
+                                        val stationName = stationSnapshot.child("Name").getValue(String::class.java) ?: ""
+                                        val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
+                                        val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
+                                        val stationData = StationData(stationName, name, openTime, closeTime)
+                                        stationList.add(stationData)
 
-            // First, fetch the favorites for the logged-in user
-            database.child("users").child(userId).child("favorites")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val stationList = ArrayList<StationData>()
-                        for (favoriteSnapshot in dataSnapshot.children) {
-                            if (favoriteSnapshot.getValue(Boolean::class.java) == true) {
-                                val stationName = favoriteSnapshot.key ?: ""
-                                // Fetch station data from the Station node
-                                database.child("Station").child(stationName)
-                                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                                        override fun onDataChange(stationSnapshot: DataSnapshot) {
-                                            val name = stationSnapshot.key ?: ""
-                                            val stationName = stationSnapshot.child("Name").getValue(String::class.java) ?: ""
-                                            val openTime = stationSnapshot.child("OpenTime").getValue(String::class.java) ?: ""
-                                            val closeTime = stationSnapshot.child("CloseTime").getValue(String::class.java) ?: ""
-                                            val stationData = StationData(stationName, name, openTime, closeTime)
-                                            stationList.add(stationData)
-
+                                        if (completedTasks.incrementAndGet() == totalFavorites) {
                                             adapter.setData(stationList)
-                                            binding.recyclerViewStation.adapter = adapter
                                         }
+                                        Log.d("FavoriteFragment", "onDataChange: $dataSnapshot")
+                                    }
 
-                                        override fun onCancelled(databaseError: DatabaseError) {
-                                            Log.e("FavouriteFragment", "Database Error: ${databaseError.message}")
-                                        }
-                                    })
-                            }
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                        Log.e("FavouriteFragment", "Database Error: ${databaseError.message}")
+                                    }
+                                })
                         }
                     }
+                }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Log.e("FavouriteFragment", "Database Error: ${databaseError.message}")
-                    }
-                })
-
-        } catch (e: Exception) {
-            Log.e("FavouriteFragment", "Exception: ${e.message}")
-        }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.e("FavouriteFragment", "Database Error: ${databaseError.message}")
+                }
+            })
 
         return binding.root
     }
-
-
-
 }

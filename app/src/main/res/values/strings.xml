@@ -12,7 +12,8 @@
 
     <!--find station page-->
     <string name="find_station">Find Station</string>
-    <string name="search_area">Search Your Area</string>
+    <string name="search">Search</string>
+    <string name="search_by_car">Search On Car</string>
     <string name="station_detail">Station Details</string>
     <string name="status">Status</string>
     <string name="open">Open</string>

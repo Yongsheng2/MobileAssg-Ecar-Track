@@ -5,27 +5,75 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.tarc.edu.etrack.databinding.FragmentNotificationsBinding
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import com.tarc.edu.etrack.R
-import com.tarc.edu.etrack.RecyclerView.MyAdapter
-import com.tarc.edu.etrack.ui.station_details.StationData
-import java.util.ArrayList
 
 class NotificationsFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_notifications, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+//        val view = inflater.inflate(R.layout.fragment_notifications, container, false)
+//
+//        val rootView = inflater.inflate(R.layout.fragment_stationdetail, container, false)
+//        val name = arguments?.getString("stationName")
+//
+//        val notificationsList = mutableListOf<NotificationData>()
+//
+//        val database = FirebaseDatabase.getInstance()
+//        val stationRef = database.getReference("Station/$name") // Adjust the reference path
+//
+//        stationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                // ... (your existing code)
+//
+//                val currentTime = getCurrentDeviceTime()
+////                val stationOpen = isStationOpen(currentTime, openTime, closeTime)
+////
+////                // Generate the notification message
+////                val notificationMessage = generateNotificationMessage(name, stationOpen)
+////
+////                notificationsList.add(NotificationData(stationName, message))
+////
+////                // Create a RecyclerView to display the notifications
+////                val recyclerView =
+////                    rootView.findViewById<RecyclerView>(R.id.recyclerViewNotification)
+////                val adapter = NotificationAdapter(notificationsList)
+//                recyclerView.adapter = adapter
+//                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Handle errors
+//            }
+//        })
+//        return rootView
+//    }
+//
+//    private fun generateNotificationMessage(stationName: String, isOpen: Boolean): String {
+//        return if (isOpen) {
+//            "Station $stationName is open."
+//        } else {
+//            "Station $stationName is closed."
+//        }
+//    }
+//
+//    private fun isStationOpen(currentTime: String, openTime: String, closeTime: String): Boolean {
+//        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+//        val currentTimeDate = sdf.parse(currentTime)
+//        val openTimeDate = sdf.parse(openTime)
+//        val closeTimeDate = sdf.parse(closeTime)
+//
+//        return currentTimeDate.after(openTimeDate) && currentTimeDate.before(closeTimeDate)
+//    }
+//
+//    private fun getCurrentDeviceTime(): String {
+//        val currentTimeMillis = System.currentTimeMillis()
+//        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+//        val currentTimeDate = Date(currentTimeMillis)
+//        return sdf.format(currentTimeDate)
+//    }
         return view
     }
-
 }
+

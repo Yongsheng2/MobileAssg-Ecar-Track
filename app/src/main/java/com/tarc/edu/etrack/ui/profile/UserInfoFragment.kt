@@ -36,7 +36,7 @@ class UserInfoFragment : Fragment() {
 
         val editTextUsername = view.findViewById<EditText>(R.id.editTextUserInfoUsername)
         val textViewEmail = view.findViewById<TextView>(R.id.textViewInfoEmail)
-        val textViewCarType = view.findViewById<TextView>(R.id.textViewCarType)
+//        val textViewCarType = view.findViewById<TextView>(R.id.textViewCarType)
         val buttonSave = view.findViewById<Button>(R.id.buttonUserInfoSave)
 
         val userId = auth.currentUser?.uid ?: ""
@@ -82,7 +82,7 @@ class UserInfoFragment : Fragment() {
                     if (dataSnapshot.exists()) {
                         val usercar = dataSnapshot.getValue(String::class.java) ?: ""
 
-                        textViewCarType.text = "$usercar"
+//                        textViewCarType.text = "$usercar"
                     }
                 }
             }
